@@ -1,34 +1,53 @@
 body {
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
   margin: 0;
   background-color: #f3f4f6;
 }
 
-section {
-  width: 300px;
-  text-align: center;
-  padding: 20px;
+header {
+  width: 100%;
   background-color: #ffffff;
-  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#jumbotron {
+  background-color: grey;
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border: none;
-  background-color: #4caf50;
-  color: white;
-  border-radius: 4px;
+#jumbotron h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
 }
 
-#answers button {
-  display: block;
-  margin: 10px auto;
-  width: 80%;
+h2 {
+  color: rgb(130, 123, 123);
+  text-align: center;
+  margin: 30px;
+}
+
+#beranda .card {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+#beranda .card:hover {
+  transform: translateY(-5px);
+}
+
+#beranda .btn-primary {
+  background-color: #4caf50;
+  border-color: #4caf50;
+  transition: background-color 0.3s ease;
+}
+
+#beranda .btn-primary:hover {
+  background-color: #45a049;
+  border-color: #45a049;
 }
