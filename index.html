@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kuis Trivia Sederhana</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Halaman Beranda -->
+    <section id="beranda">
+      <h1>Selamat Datang di Kuis Trivia</h1>
+      <p>Uji pengetahuanmu dengan kuis trivia ini!</p>
+      <button onclick="startQuiz()">Mulai Kuis</button>
+    </section>
+
+    <!-- Halaman Kuis -->
+    <section id="kuis" style="display: none">
+      <div id="question-container">
+        <h2 id="question">Pertanyaan akan muncul di sini</h2>
+        <div id="answers">
+          <!-- Pilihan jawaban akan muncul di sini -->
+        </div>
+      </div>
+      <button id="next-btn" onclick="nextQuestion()">
+        Pertanyaan Berikutnya
+      </button>
+    </section>
+
+    <!-- Halaman Hasil -->
+    <section id="hasil" style="display: none">
+      <h2>Hasil Kuis</h2>
+      <p id="score">Skor Anda:</p>
+      <button onclick="restartQuiz()">Ulangi Kuis</button>
+    </section>
+
+    <script src="script.js"></script>
+  </body>
+</html>
