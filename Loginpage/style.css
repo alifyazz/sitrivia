@@ -1,0 +1,76 @@
+/* style.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, rgba(186, 132, 237, 1), rgba(122, 85, 196, 1));
+}
+
+.login-form {
+    width: 100%;
+    max-width: 400px;
+    background-color: white;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 1s ease-in-out;
+}
+
+h2 {
+    font-weight: 600;
+    color: #6c63ff;
+}
+
+.form-label {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.input-group-text {
+    background-color: #f1f1f1;
+    border: none;
+    border-radius: 6px 0 0 6px;
+    color: #6c63ff;
+}
+
+.form-control {
+    box-shadow: none;
+    border: 1px solid #ddd;
+    border-radius: 0 6px 6px 0;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background-color: #6c63ff;
+    border: none;
+    border-radius: 25px;
+    padding: 12px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #594ab7;
+}
+
+.text-decoration-none {
+    color: #6c63ff;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.text-decoration-none:hover {
+    color: #594ab7;
+    text-decoration: underline;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
