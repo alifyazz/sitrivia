@@ -226,10 +226,19 @@ function selectAnswer(isCorrect) {
 function showResult() {
   document.getElementById("kuis").style.display = "none";
   document.getElementById("hasil").style.display = "block";
-  const percentage = (score / currentQuestions.length) * 100;
+  
+  const totalQuestions = currentQuestions.length;
+  const scoreValue = (score / totalQuestions) * 100;
+  const roundedScore = Math.round(scoreValue * 10) / 10;
+
   document.getElementById("score").innerText = 
-    `Skor Anda: ${score} dari ${currentQuestions.length} (${percentage}%)
-     Level: ${currentLevel.toUpperCase()}`;
+    `Benar: ${score} dari ${totalQuestions} (Nilai: ${roundedScore})`;
+
+  const currentUserEmail = localStorage.getItem('currentUser ');
+  const userData = JSON.parse(localStorage.getItem(currentUserEmail));
+  userData.scores = userData.scores || {};
+  userData.scores[currentLevel] = roundedScore; 
+  localStorage.setItem(currentUserEmail, JSON.stringify(userData)); 
 }
 
 function restartQuiz() {
@@ -237,4 +246,7 @@ function restartQuiz() {
   score = 0;
   document.getElementById("hasil").style.display = "none";
   document.getElementById("beranda").style.display = "block";
+
+  window.location.href = 'index.html';
+  window.location.reload();
 }
