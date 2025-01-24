@@ -26,6 +26,7 @@ class QuizController extends Controller
             'questions' => 'required|array',
             'questions.*.text' => 'required|string',
             'questions.*.options' => 'required|array|min:4',
+            'questions.*.options.*.text' => 'required|string',
             'questions.*.correctAnswer' => 'required|string',
         ]);
 
@@ -34,7 +35,7 @@ class QuizController extends Controller
         foreach ($request->questions as $q) {
             $quiz->questions()->create([
                 'text' => $q['text'],
-                'options' => $q['options'],
+                'options' => json_encode($q['options']),
                 'correct_answer' => $q['correctAnswer'],
             ]);
         }

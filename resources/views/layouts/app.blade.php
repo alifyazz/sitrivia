@@ -49,6 +49,30 @@
                     </div>
                 </div>
             </nav>
+
+            <section class="jumbotron-section py-5">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <!-- Kolom Teks -->
+                        <div class="col-md-6">
+                            <h1 class="display-4 fw-bold mb-4">Selamat Datang di SiTrivia!</h1>
+                            <p class="lead mb-4">Platform kuis interaktif untuk meningkatkan pengetahuan Anda dengan cara yang menyenangkan.</p>
+                            <div class="mt-4">
+                                <a href="#aktivitas" class="btn btn-primary rounded-pill px-4 py-2">
+                                    Mulai Kuis <i class="fas fa-arrow-right ms-2"></i>
+                                </a>
+                                <a href="#learn-more" class="btn btn-outline-primary rounded-pill px-4 py-2">Pelajari Lebih</a>
+                            </div>
+                        </div>
+                        <!-- Kolom Gambar -->
+                        <div class="col-md-6">
+                            <img src="https://cdni.iconscout.com/illustration/premium/thumb/online-quiz-3462315-2895677.png" 
+                                alt="Quiz Illustration" 
+                                class="img-fluid rounded">
+                        </div>
+                    </div>
+                </div>
+            </section>
         </header>
 
         <!-- Content Section -->
@@ -116,7 +140,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="{{ asset('mainpage/script.js') }}"></script>
 
-    <!-- Custom Page Scripts -->
-    @yield('scripts')
+    @stack('scripts')
 </body>
 </html>
