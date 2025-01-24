@@ -275,50 +275,38 @@ function deleteQuiz(quizId) {
 
 function editQuiz(quizId) {
     fetch(`/quizzes/${quizId}`)
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch quiz data");
+            }
+            return response.json();
+        })
         .then((quiz) => {
+            // Isi modal dengan data quiz
             document.getElementById("quizTitle").value = quiz.title;
-            document.getElementById("questions-container").innerHTML =
-                quiz.questions
-                    .map(
-                        (q, index) => `
-                <div class="question-block border p-3 mb-3">
-                    <div class="mb-3">
-                        <label class="form-label">Pertanyaan ${
-                            index + 1
-                        }</label>
-                        <input type="text" class="form-control question-text" value="${
-                            q.text
-                        }" required>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">Pilihan Jawaban</label>
-                        ${q.options
-                            .map(
-                                (option, i) => `
-                            <div class="input-group mb-2">
-                                <div class="input-group-text">
-                                    <input type="radio" name="correct${
-                                        index + 1
-                                    }" value="${["A", "B", "C", "D"][i]}" ${
-                                    q.correct_answer === ["A", "B", "C", "D"][i]
-                                        ? "checked"
-                                        : ""
-                                }>
+            document.getElementById("questions-container").innerHTML = quiz.questions
+                .map((q, index) => `
+                    <div class="question-block border p-3 mb-3">
+                        <div class="mb-3">
+                            <label class="form-label">Pertanyaan ${index + 1}</label>
+                            <input type="text" class="form-control question-text" value="${q.text}" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Pilihan Jawaban</label>
+                            ${q.options.map((option, i) => `
+                                <div class="input-group mb-2">
+                                    <div class="input-group-text">
+                                        <input type="radio" name="correct${index + 1}" value="${option}" ${q.correct_answer === option ? "checked" : ""}>
+                                    </div>
+                                    <input type="text" class="form-control" value="${option}" required>
                                 </div>
-                                <input type="text" class="form-control" value="${option}" required>
-                            </div>
-                        `
-                            )
-                            .join("")}
+                            `).join("")}
+                        </div>
                     </div>
-                </div>
-            `
-                    )
-                    .join("");
-            new bootstrap.Modal(
-                document.getElementById("quizCreatorModal")
-            ).show();
+                `).join("");
+
+            // Tampilkan modal editor
+            new bootstrap.Modal(document.getElementById("quizCreatorModal")).show();
         })
         .catch((error) => console.error("Error fetching quiz data:", error));
 }
@@ -329,18 +317,28 @@ function editQuiz(quizId) {
 
 function openQuizModal(quizId) {
     fetch(`/quizzes/${quizId}`)
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch quiz data");
+            }
+            return response.json();
+        })
         .then((data) => {
             currentQuestions = data.questions;
             currentQuestionIndex = 0;
             score = 0;
+
+            // Tampilkan pertanyaan pertama
             document.getElementById("quizContent").style.display = "block";
             document.getElementById("quizResult").style.display = "none";
             showQuestion();
+
+            // Tampilkan modal quiz
             quizModal.show();
         })
-        .catch((error) => console.error("Error:", error));
+        .catch((error) => console.error("Error fetching quiz data:", error));
 }
+
 
 function showQuestion() {
     resetState();
