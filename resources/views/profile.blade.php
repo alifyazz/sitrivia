@@ -79,19 +79,19 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Nomber HP</label>
-                                    <input type="tel" class="form-control" value="+1 (555) 123-4567" disabled>
+                                    <input type="tel" class="form-control" value="+1 (555) 123-4567">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Tanggal Lahir</label>
-                                    <input type="date" class="form-control" value="1995-06-15" disabled>
+                                    <input type="date" class="form-control" value="1995-06-15">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Kewarganegaraan</label>
-                                    <input type="text" class="form-control" value="Canadian" disabled>
+                                    <input type="text" class="form-control" value="Canadian">
                                 </div>
                             </div>
 
@@ -99,13 +99,13 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label class="form-label">Alamat</label>
-                                    <input type="text" class="form-control" value="123 Maple Street, Toronto, ON M5V 2T6" disabled>
+                                    <input type="text" class="form-control" value="123 Maple Street, Toronto, ON M5V 2T6">
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
                                     <label class="form-label">Bio</label>
-                                    <textarea class="form-control" rows="3" disabled>Passionate software developer with a love for problem-solving and building user-friendly applications. Always eager to learn new technologies and contribute to innovative projects.</textarea>
+                                    <textarea class="form-control" rows="3">Passionate software developer with a love for problem-solving and building user-friendly applications. Always eager to learn new technologies and contribute to innovative projects.</textarea>
                                 </div>
                             </div>
 
@@ -127,28 +127,6 @@
                             </div>
                         </div>
                     </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Structure -->
-    <div class="modal fade" id="quizModal" tabindex="-1" aria-labelledby="quizModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="quizModalLabel">Quiz</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="quizContent"></div>
-                    <div id="quizResult" style="display: none;">
-                        <p id="score"></p>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="restartQuiz()">Restart Quiz</button>
                 </div>
             </div>
         </div>

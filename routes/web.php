@@ -22,7 +22,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Auth Routes
-Auth::routes();
+Auth::routes(['logout' => false]);
 
 // CRUD Routes for Quiz
 Route::resource('quizzes', QuizController::class)->middleware('auth');
