@@ -65,7 +65,7 @@ class QuizController extends Controller
 
         $quiz->update(['title' => $request->title]);
 
-        $quiz->questions()->delete(); // Delete old questions
+        $quiz->questions()->delete();
 
         foreach ($request->questions as $q) {
             $quiz->questions()->create([

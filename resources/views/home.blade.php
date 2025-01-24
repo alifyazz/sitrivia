@@ -122,6 +122,7 @@
                                         <button class="btn btn-success w-100 rounded-pill" onclick="openQuizModal('{{ $quiz->id }}')">
                                             Mulai Kuis
                                         </button>
+                                        <button class="btn btn-danger mt-1 w-100 rounded-pill" onclick="deleteQuiz('{{ $quiz->id }}')">Hapus</button>
                                         <p id="{{ $quiz->id }}Score" class="score-text mt-2 small"></p>
                                     </div>
                                 </div>
@@ -358,6 +359,52 @@ function saveQuiz() {
         console.error('Error:', error);
         alert('Terjadi kesalahan: ' + error.message);
     });
+}
+
+function editQuiz(quizId) {
+    fetch(`/api/quizzes/${quizId}`)
+        .then(response => response.json())
+        .then(quiz => {
+            document.getElementById('quizTitle').value = quiz.title;
+            document.getElementById('questions-container').innerHTML = quiz.questions.map((q, index) => `
+                <div class="question-block border p-3 mb-3">
+                    <div class="mb-3">
+                        <label class="form-label">Pertanyaan ${index + 1}</label>
+                        <input type="text" class="form-control question-text" value="${q.question}" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Pilihan Jawaban</label>
+                        ${q.answers.map((answer, i) => `
+                            <div class="input-group mb-2">
+                                <div class="input-group-text">
+                                    <input type="radio" name="correct${index + 1}" value="${['A', 'B', 'C', 'D'][i]}" ${q.correct === ['A', 'B', 'C', 'D'][i] ? 'checked' : ''}>
+                                </div>
+                                <input type="text" class="form-control" value="${answer}" required>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+            new bootstrap.Modal(document.getElementById('quizCreatorModal')).show();
+        });
+}
+
+function deleteQuiz(quizId) {
+    if (confirm('Yakin ingin menghapus kuis ini?')) {
+        fetch(`/api/quizzes/${quizId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            },
+        }).then(response => {
+            if (response.ok) {
+                alert('Kuis berhasil dihapus!');
+                location.reload();
+            } else {
+                alert('Gagal menghapus kuis!');
+            }
+        });
+    }
 }
 </script>
 @endsection
