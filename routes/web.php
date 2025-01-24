@@ -47,4 +47,5 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name(
 
 // Quiz Routes
 Route::get('/quizzes/{quiz}', [QuizController::class, 'show'])->name('quizzes.show');
-Route::delete('quizzes/{quiz}', [QuizController::class, 'destroy']);
+Route::delete('quizzes/{quiz}', [QuizController::class, 'destroy'])->name('quizzes.destroy');
+

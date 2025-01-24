@@ -119,10 +119,8 @@
                                     </div>
                                     <div class="card-body text-center">
                                         <h5 class="card-title mb-2">{{ $quiz->title }}</h5>
-                                        <button class="btn btn-success w-100 rounded-pill" onclick="openQuizModal('{{ $quiz->id }}')">
-                                            Mulai Kuis
-                                        </button>
-                                        <button class="btn btn-danger mt-1 w-100 rounded-pill" onclick="deleteQuiz('{{ $quiz->id }}')">Hapus</button>
+                                        <button class="my-1 btn btn-success w-100 rounded-pill" onclick="openQuizModal('{{ $quiz->id }}')">Mulai</button>
+                                        <button class="my-1 btn btn-danger w-100 rounded-pill" onclick="deleteQuiz('{{ $quiz->id }}')">Hapus</button>
                                         <p id="{{ $quiz->id }}Score" class="score-text mt-2 small"></p>
                                     </div>
                                 </div>
@@ -362,7 +360,7 @@ function saveQuiz() {
 }
 
 function editQuiz(quizId) {
-    fetch(`/api/quizzes/${quizId}`)
+    fetch(`/quizzes/${quizId}`)
         .then(response => response.json())
         .then(quiz => {
             document.getElementById('quizTitle').value = quiz.title;
@@ -391,20 +389,23 @@ function editQuiz(quizId) {
 
 function deleteQuiz(quizId) {
     if (confirm('Yakin ingin menghapus kuis ini?')) {
-        fetch(`/api/quizzes/${quizId}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-            },
-        }).then(response => {
-            if (response.ok) {
-                alert('Kuis berhasil dihapus!');
-                location.reload();
-            } else {
-                alert('Gagal menghapus kuis!');
-            }
-        });
-    }
+        fetch(`/quizzes/${quizId}`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+        },
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Kuis berhasil dihapus!');
+            location.reload();
+        } else {
+            alert('Gagal menghapus kuis!');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+
+        }
 }
 </script>
 @endsection
