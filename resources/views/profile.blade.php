@@ -52,12 +52,8 @@
                 <div class="profile-info">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h2 class="h4 fw-bold m-0">Informasi Profil</h2>
-                        <button 
-                            onclick="toggleEdit()" 
-                            class="btn btn-primary d-flex align-items-center rounded-pill"
-                        >
-                            <span id="editButtonText">Edit Profil</span>
-                            <i class="fas fa-pencil-alt ms-2"></i>
+                        <button class="btn btn-primary rounded-pill" id="editProfileButton">
+                            <i class="fas fa-edit me-2"></i> Edit Profil
                         </button>
                     </div>
 
@@ -79,19 +75,19 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Nomber HP</label>
-                                    <input type="tel" class="form-control" value="+1 (555) 123-4567">
+                                    <input type="tel" class="form-control profile-input" id="phoneNumber" value="+1 (555) 123-4567" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Tanggal Lahir</label>
-                                    <input type="date" class="form-control" value="1995-06-15">
+                                    <input type="date" class="form-control profile-input" id="birthDate" value="1995-06-15" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Kewarganegaraan</label>
-                                    <input type="text" class="form-control" value="Canadian">
+                                    <input type="text" class="form-control profile-input" id="nationality" value="Canadian" disabled>
                                 </div>
                             </div>
 
@@ -99,20 +95,25 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label class="form-label">Alamat</label>
-                                    <input type="text" class="form-control" value="123 Maple Street, Toronto, ON M5V 2T6">
+                                    <input type="text" class="form-control profile-input" id="address" value="123 Maple Street, Toronto, ON M5V 2T6" disabled>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
                                     <label class="form-label">Bio</label>
-                                    <textarea class="form-control" rows="3">Passionate software developer with a love for problem-solving and building user-friendly applications. Always eager to learn new technologies and contribute to innovative projects.</textarea>
+                                    <textarea class="form-control profile-input" id="bio" rows="3" disabled>
+                                        Passionate software developer with a love for problem-solving and building user-friendly applications. Always eager to learn new technologies and contribute to innovative projects.
+                                    </textarea>
                                 </div>
                             </div>
 
-                            <!-- Save Changes Button -->
+                            <!-- Action Buttons -->
                             <div class="col-12">
-                                <button type="submit" class="btn btn-success save-changes d-none" id="saveChanges">
+                                <button type="submit" class="btn btn-success rounded-pill save-changes d-none" id="saveChangesButton">
                                     <i class="fas fa-save me-2"></i> Save Changes
+                                </button>
+                                <button class="btn btn-secondary rounded-pill d-none" id="cancelChangesButton">
+                                    <i class="fas fa-times me-2"></i> Cancel
                                 </button>
                             </div>
 
@@ -184,33 +185,86 @@
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function toggleEdit() {
-            const form = document.getElementById('profileForm');
-            const inputs = form.getElementsByTagName('input');
-            const textareas = form.getElementsByTagName('textarea');
-            const saveChanges = document.getElementById('saveChanges');
-            const editButtonText = document.getElementById('editButtonText');
-            
-            // Toggle inputs
-            for (let input of inputs) {
-                if (input.type !== 'hidden' && input.type !== 'file') {
-                    input.disabled = !input.disabled;
-                }
-            }
-            
-            // Toggle textareas
-            for (let textarea of textareas) {
-                textarea.disabled = !textarea.disabled;
-            }
-            
-            if (saveChanges.classList.contains('d-none')) {
-                saveChanges.classList.remove('d-none');
-                editButtonText.textContent = 'Cancel Edit';
-            } else {
-                saveChanges.classList.add('d-none');
-                editButtonText.textContent = 'Edit Profile';
-            }
+        const editButton = document.getElementById('editProfileButton');
+        const saveButton = document.getElementById('saveChangesButton');
+        const cancelButton = document.getElementById('cancelChangesButton');
+        const profileInputs = document.querySelectorAll('.profile-input');
+
+        // Fungsi untuk mengaktifkan mode edit
+        function enableEditMode() {
+            profileInputs.forEach(input => {
+                input.disabled = false; // Aktifkan semua input
+            });
+            editButton.classList.add('d-none'); // Sembunyikan tombol edit
+            saveButton.classList.remove('d-none'); // Tampilkan tombol save
+            cancelButton.classList.remove('d-none'); // Tampilkan tombol cancel
         }
+
+        // Fungsi untuk menyimpan perubahan
+        function saveProfileChanges() {
+            const updatedProfile = {
+                phoneNumber: document.getElementById('phoneNumber').value,
+                birthDate: document.getElementById('birthDate').value,
+                nationality: document.getElementById('nationality').value,
+                address: document.getElementById('address').value,
+                bio: document.getElementById('bio').value,
+            };
+
+            // Simpan perubahan ke server menggunakan fetch API
+            fetch('/update-profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: JSON.stringify(updatedProfile),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Gagal menyimpan perubahan profil.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert(data.message || 'Perubahan berhasil disimpan.');
+                    disableEditMode(); // Kembali ke mode non-edit
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat menyimpan profil.');
+                });
+        }
+
+        
+        function cancelProfileChanges() {
+            profileInputs.forEach(input => {
+                input.disabled = true; 
+            });
+            // Reset nilai input ke nilai asli (bisa dari server atau localStorage)
+            document.getElementById('phoneNumber').value = '+1 (555) 123-4567';
+            document.getElementById('birthDate').value = '1995-06-15';
+            document.getElementById('nationality').value = 'Canadian';
+            document.getElementById('address').value = '123 Maple Street, Toronto, ON M5V 2T6';
+            document.getElementById('bio').value =
+                'Passionate software developer with a love for problem-solving and building user-friendly applications. Always eager to learn new technologies and contribute to innovative projects.';
+
+            disableEditMode();
+        }
+
+        // Fungsi untuk menonaktifkan mode edit
+        function disableEditMode() {
+            profileInputs.forEach(input => {
+                input.disabled = true; 
+            });
+            editButton.classList.remove('d-none'); 
+            saveButton.classList.add('d-none'); 
+            cancelButton.classList.add('d-none'); 
+        }
+
+        // Event Listeners
+        editButton.addEventListener('click', enableEditMode);
+        saveButton.addEventListener('click', saveProfileChanges);
+        cancelButton.addEventListener('click', cancelProfileChanges);
     </script>
 </body>
 </html>
