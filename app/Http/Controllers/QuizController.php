@@ -26,12 +26,13 @@ class QuizController extends Controller
             'questions' => 'required|array',
             'questions.*.text' => 'required|string',
             'questions.*.options' => 'required|array|min:4',
-            'questions.*.options.*.text' => 'required|string',
+            'questions.*.options.*.value' => 'required|string', 
+            'questions.*.options.*.text' => 'required|string', 
             'questions.*.correctAnswer' => 'required|string',
         ]);
-
+    
         $quiz = Quiz::create(['title' => $request->title]);
-
+    
         foreach ($request->questions as $q) {
             $quiz->questions()->create([
                 'text' => $q['text'],
@@ -39,15 +40,30 @@ class QuizController extends Controller
                 'correct_answer' => $q['correctAnswer'],
             ]);
         }
-
+    
         return redirect()->route('quizzes.index')->with('success', 'Quiz created successfully.');
     }
+    
 
     public function show(Quiz $quiz)
     {
-        return response()->json($quiz->load('questions'));
+        $quiz->load('questions');
+    
+        // Transform questions to ensure 'options' is an array
+        $quiz->questions->transform(function ($question) {
+            $decodedOptions = json_decode($question->options, true);
+    
+            if (!is_array($decodedOptions)) {
+                throw new \Exception("Invalid options format for question ID: {$question->id}");
+            }
+    
+            $question->options = $decodedOptions;
+            return $question;
+        });
+    
+        return response()->json($quiz);
     }
-
+    
 
     public function edit(Quiz $quiz)
     {
@@ -71,12 +87,12 @@ class QuizController extends Controller
         foreach ($request->questions as $q) {
             $quiz->questions()->create([
                 'text' => $q['text'],
-                'options' => $q['options'],
+                'options' => json_encode($q['options']),
                 'correct_answer' => $q['correctAnswer'],
             ]);
         }
 
-        return redirect()->route('quizzes.index')->with('success', 'Quiz updated successfully.');
+        return response()->json(['message' => 'Quiz updated successfully!']);
     }
 
     public function destroy(Quiz $quiz)

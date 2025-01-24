@@ -1,44 +1,59 @@
-// =====================
 // Global Variables
-// =====================
+
 let currentQuestionIndex = 0;
 let score = 0;
 let currentLevel = "";
 let currentQuestions = [];
-let quizModal;
+let quizModal; // This will be initialized later
 let questionCount = 1;
 
 // =====================
 // Initialization
 // =====================
 document.addEventListener("DOMContentLoaded", () => {
-    quizModal = new bootstrap.Modal(document.getElementById("quizModal"));
+    console.log("Initializing...");
 
-    updateUserInfo();
-
-    document.querySelectorAll(".edit-quiz-btn").forEach((button) => {
-        button.addEventListener("click", () => {
-            const quizId = button.getAttribute("data-quiz-id");
-            editQuiz(quizId);
-        });
-    });
-
-    const createQuizBtn = document.querySelector('.btn-create-quiz');
-    if (createQuizBtn) {
-        createQuizBtn.addEventListener('click', showQuizCreator);
+    const quizCreatorModal = document.getElementById("quizCreatorModal");
+    if (!quizCreatorModal) {
+        console.error("Quiz Creator Modal not found!");
+        return;
     }
 
-    document.querySelectorAll('.btn-start-quiz').forEach(button => {
-        button.addEventListener('click', () => {
-            const quizId = button.getAttribute('data-quiz-id');
+    quizModal = new bootstrap.Modal(document.getElementById("quizModal"));
+
+    // Event listener untuk tombol Create Quiz
+    const createQuizBtn = document.querySelector(".btn-create-quiz");
+    if (createQuizBtn) {
+        createQuizBtn.addEventListener("click", () => {
+            const modal = new bootstrap.Modal(quizCreatorModal);
+            modal.show();
+        });
+    }
+
+    // Event listener untuk tombol Start Quiz
+    document.querySelectorAll(".btn-start-quiz").forEach((button) => {
+        button.addEventListener("click", (e) => {
+            const quizId = e.target.getAttribute("data-quiz-id");
+            console.log(`Starting quiz with ID: ${quizId}`);
             openQuizModal(quizId);
         });
     });
 
-    document.querySelectorAll('.btn-delete-quiz').forEach(button => {
-        button.addEventListener('click', () => {
-            const quizId = button.getAttribute('data-quiz-id');
+    // Event listener untuk tombol Delete Quiz
+    document.querySelectorAll(".btn-delete-quiz").forEach((button) => {
+        button.addEventListener("click", (e) => {
+            const quizId = e.target.getAttribute("data-quiz-id");
+            console.log(`Deleting quiz with ID: ${quizId}`);
             deleteQuiz(quizId);
+        });
+    });
+
+    // Event listener untuk tombol Edit Quiz
+    document.querySelectorAll(".edit-quiz-btn").forEach((button) => {
+        button.addEventListener("click", (e) => {
+            const quizId = e.target.getAttribute("data-quiz-id");
+            console.log(`Editing quiz with ID: ${quizId}`);
+            editQuiz(quizId);
         });
     });
 });
@@ -76,8 +91,10 @@ function updateWelcomeMessage(message) {
 // =====================
 // Quiz Management
 // =====================
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('.btn-create-quiz').addEventListener('click', showQuizCreator);
+document.addEventListener("DOMContentLoaded", () => {
+    document
+        .querySelector(".btn-create-quiz")
+        .addEventListener("click", showQuizCreator);
 });
 
 function showQuizCreator() {
@@ -89,9 +106,9 @@ function showQuizCreator() {
 
 function addQuestion() {
     questionCount++;
-    const container = document.getElementById('questions-container');
-    const questionBlock = document.createElement('div');
-    questionBlock.classList.add('question-block', 'border', 'p-3', 'mb-3');
+    const container = document.getElementById("questions-container");
+    const questionBlock = document.createElement("div");
+    questionBlock.classList.add("question-block", "border", "p-3", "mb-3");
     questionBlock.innerHTML = `
         <div class="mb-3">
             <label class="form-label">Pertanyaan ${questionCount}</label>
@@ -155,9 +172,9 @@ function generateQuestionHTML(index) {
 }
 
 function saveQuiz() {
-    const quizTitle = document.getElementById('quizTitle').value.trim();
+    const quizTitle = document.getElementById("quizTitle").value.trim();
     const questions = [];
-    const questionBlocks = document.querySelectorAll('.question-block');
+    const questionBlocks = document.querySelectorAll(".question-block");
 
     if (!quizTitle) {
         alert("Judul kuis tidak boleh kosong.");
@@ -166,9 +183,11 @@ function saveQuiz() {
 
     let isValid = true;
     questionBlocks.forEach((block, index) => {
-        const questionText = block.querySelector('.question-text').value.trim();
+        const questionText = block.querySelector(".question-text").value.trim();
         const options = [];
-        const correctAnswer = block.querySelector(`input[name="correct${index + 1}"]:checked`)?.value;
+        const correctAnswer = block.querySelector(
+            `input[name="correct${index + 1}"]:checked`
+        )?.value;
 
         if (!questionText) {
             alert(`Teks pertanyaan ${index + 1} tidak boleh kosong.`);
@@ -176,10 +195,16 @@ function saveQuiz() {
             return;
         }
 
-        block.querySelectorAll('.input-group').forEach((group, i) => {
-            const optionText = group.querySelector('.form-control').value.trim();
+        block.querySelectorAll(".input-group").forEach((group, i) => {
+            const optionText = group
+                .querySelector(".form-control")
+                .value.trim();
             if (!optionText) {
-                alert(`Pilihan jawaban ${String.fromCharCode(65 + i)} di pertanyaan ${index + 1} tidak boleh kosong.`);
+                alert(
+                    `Pilihan jawaban ${String.fromCharCode(
+                        65 + i
+                    )} di pertanyaan ${index + 1} tidak boleh kosong.`
+                );
                 isValid = false;
                 return;
             }
@@ -196,36 +221,38 @@ function saveQuiz() {
         }
 
         questions.push({
-            text: questionText, 
-            options: options, 
-            correctAnswer: correctAnswer, 
+            text: questionText,
+            options: options,
+            correctAnswer: correctAnswer,
         });
     });
 
     if (!isValid) return;
 
-    fetch('/quizzes', {
-        method: 'POST',
+    fetch("/quizzes", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
         },
         body: JSON.stringify({
             title: quizTitle,
             questions: questions,
         }),
     })
-        .then(response => {
-            if (!response.ok) throw new Error('Gagal menyimpan kuis.');
+        .then((response) => {
+            if (!response.ok) throw new Error("Gagal menyimpan kuis.");
             return response.json();
         })
-        .then(data => {
-            alert(data.message || 'Kuis berhasil disimpan!');
+        .then((data) => {
+            alert(data.message || "Kuis berhasil disimpan!");
             location.reload();
         })
-        .catch(error => {
+        .catch((error) => {
             console.error(error);
-            alert('Terjadi kesalahan saat menyimpan kuis.');
+            alert("Terjadi kesalahan saat menyimpan kuis.");
         });
 }
 
@@ -250,7 +277,6 @@ function getQuizData() {
 
     return quizData;
 }
-
 
 function deleteQuiz(quizId) {
     if (!confirm("Yakin ingin menghapus kuis ini?")) return;
@@ -282,33 +308,142 @@ function editQuiz(quizId) {
             return response.json();
         })
         .then((quiz) => {
-            // Isi modal dengan data quiz
             document.getElementById("quizTitle").value = quiz.title;
-            document.getElementById("questions-container").innerHTML = quiz.questions
-                .map((q, index) => `
-                    <div class="question-block border p-3 mb-3">
-                        <div class="mb-3">
-                            <label class="form-label">Pertanyaan ${index + 1}</label>
-                            <input type="text" class="form-control question-text" value="${q.text}" required>
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Pilihan Jawaban</label>
-                            ${q.options.map((option, i) => `
-                                <div class="input-group mb-2">
-                                    <div class="input-group-text">
-                                        <input type="radio" name="correct${index + 1}" value="${option}" ${q.correct_answer === option ? "checked" : ""}>
-                                    </div>
-                                    <input type="text" class="form-control" value="${option}" required>
-                                </div>
-                            `).join("")}
-                        </div>
-                    </div>
-                `).join("");
+            const questionsContainer = document.getElementById(
+                "questions-container"
+            );
+            questionsContainer.innerHTML = "";
 
-            // Tampilkan modal editor
-            new bootstrap.Modal(document.getElementById("quizCreatorModal")).show();
+            quiz.questions.forEach((q, index) => {
+                const questionBlock = document.createElement("div");
+                questionBlock.classList.add(
+                    "question-block",
+                    "border",
+                    "p-3",
+                    "mb-3"
+                );
+                questionBlock.innerHTML = `
+                    <div class="mb-3">
+                        <label class="form-label">Pertanyaan ${
+                            index + 1
+                        }</label>
+                        <input type="text" class="form-control question-text" value="${
+                            q.text
+                        }" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Pilihan Jawaban</label>
+                        ${q.options
+                            .map(
+                                (option, i) => `
+                            <div class="input-group mb-2">
+                                <div class="input-group-text">
+                                    <input type="radio" name="correct${
+                                        index + 1
+                                    }" value="${option.value}" ${
+                                    q.correct_answer === option.value
+                                        ? "checked"
+                                        : ""
+                                }>
+                                </div>
+                                <input type="text" class="form-control" value="${
+                                    option.text
+                                }" required>
+                            </div>
+                        `
+                            )
+                            .join("")}
+                    </div>
+                `;
+                questionsContainer.appendChild(questionBlock);
+            });
+
+            const quizCreatorModal =
+                document.getElementById("quizCreatorModal");
+            quizCreatorModal.setAttribute("data-quiz-id", quizId);
+
+            new bootstrap.Modal(quizCreatorModal).show();
         })
         .catch((error) => console.error("Error fetching quiz data:", error));
+}
+
+function saveEditedQuiz() {
+    const quizId = document
+        .getElementById("quizCreatorModal")
+        .getAttribute("data-quiz-id");
+    const quizTitle = document.getElementById("quizTitle").value.trim();
+    const questionsContainer = document.getElementById("questions-container");
+    const questionBlocks =
+        questionsContainer.querySelectorAll(".question-block");
+
+    if (!quizTitle) {
+        alert("Judul kuis tidak boleh kosong.");
+        return;
+    }
+
+    const questions = [];
+    questionBlocks.forEach((block, index) => {
+        const questionText = block.querySelector(".question-text").value.trim();
+        const options = [];
+        const correctAnswer = block.querySelector(
+            `input[name="correct${index + 1}"]:checked`
+        )?.value;
+
+        if (!questionText) {
+            alert(`Teks pertanyaan ${index + 1} tidak boleh kosong.`);
+            return;
+        }
+
+        block.querySelectorAll(".input-group").forEach((group) => {
+            const optionText = group
+                .querySelector(".form-control")
+                .value.trim();
+            const optionValue = group.querySelector(
+                'input[type="radio"]'
+            ).value;
+
+            if (!optionText) {
+                alert("Teks pilihan jawaban tidak boleh kosong.");
+                return;
+            }
+
+            options.push({ value: optionValue, text: optionText });
+        });
+
+        questions.push({
+            text: questionText,
+            options: options,
+            correctAnswer: correctAnswer,
+        });
+    });
+
+    fetch(`/quizzes/${quizId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
+        },
+        body: JSON.stringify({
+            title: quizTitle,
+            questions: questions,
+        }),
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to update quiz");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            alert(data.message || "Kuis berhasil diperbarui!");
+            location.reload();
+        })
+        .catch((error) => {
+            console.error("Error updating quiz:", error);
+            alert("Terjadi kesalahan saat memperbarui kuis.");
+        });
 }
 
 // =====================
@@ -324,21 +459,39 @@ function openQuizModal(quizId) {
             return response.json();
         })
         .then((data) => {
-            currentQuestions = data.questions;
+            console.log("Received quiz data:", data);
+
+            currentQuestions = data.questions.map((question) => {
+                if (!Array.isArray(question.options)) {
+                    console.error(
+                        `Invalid options format for question ID: ${question.id}`,
+                        question.options
+                    );
+                    throw new Error(
+                        `Invalid options format for question ID: ${question.id}`
+                    );
+                }
+                return question;
+            });
+
             currentQuestionIndex = 0;
             score = 0;
 
-            // Tampilkan pertanyaan pertama
+            // Display the first question
             document.getElementById("quizContent").style.display = "block";
             document.getElementById("quizResult").style.display = "none";
             showQuestion();
 
-            // Tampilkan modal quiz
+            // Show the quiz modal
             quizModal.show();
         })
-        .catch((error) => console.error("Error fetching quiz data:", error));
+        .catch((error) => {
+            console.error("Error fetching quiz data:", error);
+            alert(
+                "There was a problem loading the quiz. Please try again later."
+            );
+        });
 }
-
 
 function showQuestion() {
     resetState();
@@ -347,12 +500,23 @@ function showQuestion() {
     const answersElement = document.getElementById("answers");
 
     questionElement.innerText = question.text;
+
+    if (!Array.isArray(question.options)) {
+        console.error("Invalid options format:", question.options);
+        return;
+    }
+
     question.options.forEach((option) => {
+        if (!option.text || !option.value) {
+            console.error("Invalid option structure:", option);
+            return;
+        }
+
         const button = document.createElement("button");
-        button.innerText = option;
+        button.innerText = option.text; // Tampilkan teks jawaban
         button.classList.add("btn", "btn-outline-primary");
         button.addEventListener("click", () =>
-            selectAnswer(option === question.correct_answer)
+            selectAnswer(option.value === question.correct_answer)
         );
         answersElement.appendChild(button);
     });
@@ -395,6 +559,5 @@ function showResult() {
 
 function restartQuiz() {
     quizModal.hide();
-    currentQuestionIndex = 0;
     score = 0;
 }
