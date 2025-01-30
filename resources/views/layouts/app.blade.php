@@ -41,7 +41,7 @@
                         <!-- Profile Icon -->
                         @auth
                             <a href="{{ route('profile.show') }}" class="ms-3">
-                            <img src="{{ Auth::user()->profile_photo_url ?? asset('default-avatar.png') }}" alt="{{ Auth::user()->name }}" class="rounded-circle">
+                            <i class="fas fa-user-circle fa-2x text-white"></i>
                             </a>
                         @else
                             <a href="{{ route('login') }}" class="btn btn-light ms-3">Login</a>
@@ -65,10 +65,9 @@
                             </div>
                         </div>
                         <!-- Kolom Gambar -->
-                        <div class="col-md-6">
-                            <img src="https://cdni.iconscout.com/illustration/premium/thumb/online-quiz-3462315-2895677.png" 
-                                alt="Quiz Illustration" 
-                                class="img-fluid rounded">
+                        <div class="col-md-6 text-center">
+                            <i class="fas fa-file-alt fa-5x text-primary"></i>
+                            <i class="fas fa-pencil-alt fa-5x text-primary" style="margin-left:10px;"></i>
                         </div>
                     </div>
                 </div>

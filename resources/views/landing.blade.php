@@ -33,7 +33,7 @@
                 </ul>
                 <!-- Profile Icon -->
                 <a href="{{ route('profile.show') }}" class="ms-3">
-                    <img src="/images/profile-placeholder.jpg" alt="Profile" class="rounded-circle border border-white" style="width: 40px; height: 40px;">
+                <i class="fas fa-user-circle fa-2x text-white"></i>
                 </a>
             </div>
         </div>
@@ -50,9 +50,8 @@
                     <button class="btn btn-primary rounded-pill px-4 py-2" id="mainButton">Get Started</button>
                 </div>
                 <div class="col-md-6">
-                    <img src="https://cdni.iconscout.com/illustration/premium/thumb/online-quiz-3462315-2895677.png" 
-                         alt="Quiz Illustration" 
-                         class="img-fluid rounded">
+                <i class="fas fa-file-alt fa-5x text-primary"></i>
+                <i class="fas fa-pencil-alt fa-5x text-primary" style="margin-left:10px;"></i>
                 </div>
             </div>
         </div>

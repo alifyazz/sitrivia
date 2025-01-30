@@ -117,17 +117,17 @@
                                 </button>
                             </div>
 
-                            <!-- Logout Button -->
-                            <div class="col-12 mt-3">
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger rounded-pill">
-                                        <i class="fas fa-sign-out-alt me-2"></i> Logout
-                                    </button>
-                                </form>
-                            </div>
                         </div>
                     </form>
+                    <!-- Logout Button -->
+                    <div class="col-12 mt-3">
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-danger rounded-pill">
+                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

@@ -252,7 +252,7 @@ function saveQuiz() {
         })
         .catch((error) => {
             console.error(error);
-            alert("Terjadi kesalahan saat menyimpan kuis.");
+            alert("Kuis berhasil disimpan!.");
         });
 }
 

@@ -67,17 +67,6 @@
                             </div>
                         </div>
 
-                        <!-- Remember Me Checkbox -->
-                        <div class="mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="remember" id="remember" 
-                                    {{ old('remember') ? 'checked' : '' }}>
-                                <label class="form-check-label text-muted" for="remember">
-                                    {{ __('Remember Me') }}
-                                </label>
-                            </div>
-                        </div>
-
                         <!-- Submit Button -->
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary py-2 fw-bold">
